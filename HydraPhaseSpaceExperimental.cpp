@@ -57,6 +57,8 @@ using hydra::host;
 
 GInt_t main(int argc, char** argv) {
 
+    std::atexit([](){std::cout << rang::style::reset;});
+
     CLI::App app{"Command line arguments for HydraRandomExample"};
 
 	size_t  nentries = 5e6;
@@ -99,6 +101,10 @@ GInt_t main(int argc, char** argv) {
         return app.exit(e);
     }
 
+    std::cout << rang::fg::blue <<
+        "Hydra:\n" << app.config_to_str()
+        << rang::fg::reset << std::endl; 
+
     CLI::AutoTimer total_timer{"Total time taken", CLI::Timer::Big};
 
 	//----------------
@@ -118,9 +124,11 @@ GInt_t main(int argc, char** argv) {
 	    phsp_P.Generate(P, P2ABC_Events_d.begin(), P2ABC_Events_d.end());
     }
 
+    std::cout << rang::fg::green;
 	for(size_t i=0; i<10; i++ ){
         std::cout << P2ABC_Events_d[i] << std::endl;
 	}
+    std::cout << rang::fg::reset;
 
 
    //----------------
@@ -138,11 +146,15 @@ GInt_t main(int argc, char** argv) {
 			, C2ab_Events_d.begin());
     }
 
+    std::cout << rang::fg::green;
 	for( size_t i=0; i<10; i++ ){
         std::cout << C2ab_Events_d[i] << std::endl;
 	}
+    std::cout << rang::fg::reset;
 
-    std::cout << P2ABC_Events_d.GetNEvents() << std::endl;
+    std::cout << rang::fg::bold << rang::fg::magenta
+              << P2ABC_Events_d.GetNEvents()
+              << rang::fg::reset << std::endl;
 
 	typedef hydra::experimental::Events<3, device> event3_t;
 	typedef hydra::experimental::Events<2, device> event2_t;

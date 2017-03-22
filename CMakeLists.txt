@@ -12,7 +12,8 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(HYDRA_ROOT "../Hydra")
 
 include(AddCLI)
+include(AddRang)
 include(AddHydra)
 
 add_executable(HydraPhaseSpaceExperimental HydraPhaseSpaceExperimental.cpp)
-target_link_libraries(HydraPhaseSpaceExperimental PUBLIC CLI Hydra_OMP)
+target_link_libraries(HydraPhaseSpaceExperimental PUBLIC CLI Hydra_OMP rang)
