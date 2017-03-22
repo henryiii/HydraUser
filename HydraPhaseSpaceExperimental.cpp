@@ -35,8 +35,9 @@
 #include <chrono>
 
 //command line
-#include <CLI/CLI.hpp>
-#include <CLI/Timer.hpp>
+#include "CLI/CLI.hpp"
+#include "CLI/Timer.hpp"
+#include "rang.hpp"
 
 //this lib
 #include <hydra/Types.h>
@@ -98,12 +99,13 @@ GInt_t main(int argc, char** argv) {
     try {
         app.parse(argc, argv);
     } catch (const CLI::ParseError &e){
+        std::cout << (e.get_exit_code()==0 ? rang::fg::blue : rang::fg::red);
         return app.exit(e);
     }
 
     std::cout << rang::fg::blue <<
         "Hydra:\n" << app.config_to_str()
-        << rang::fg::reset << std::endl; 
+        << rang::fg::reset << std::flush; 
 
     CLI::AutoTimer total_timer{"Total time taken", CLI::Timer::Big};
 
@@ -152,9 +154,9 @@ GInt_t main(int argc, char** argv) {
 	}
     std::cout << rang::fg::reset;
 
-    std::cout << rang::fg::bold << rang::fg::magenta
-              << P2ABC_Events_d.GetNEvents()
-              << rang::fg::reset << std::endl;
+    std::cout << rang::style::bold << rang::fg::magenta
+              << "Events generated: " << P2ABC_Events_d.GetNEvents()
+              << rang::style::reset << std::endl;
 
 	typedef hydra::experimental::Events<3, device> event3_t;
 	typedef hydra::experimental::Events<2, device> event2_t;
