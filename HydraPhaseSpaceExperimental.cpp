@@ -51,6 +51,9 @@
 #include <hydra/Copy.h>
 
 using hydra::GReal_t;
+using hydra::GInt_t;
+using hydra::device;
+using hydra::host;
 
 GInt_t main(int argc, char** argv) {
 
@@ -64,28 +67,28 @@ GInt_t main(int argc, char** argv) {
         ->required();
 
 	GReal_t daughter1_mass = 0;
-	app.add_option("-A,--daughter-A-mass", daughter1_mass
+	app.add_option("-A,--daughter-A-mass", daughter1_mass,
 				"Mass of daughter particle 'A' [P -> A B [C -> a b]]")
         ->required();
 
 	GReal_t daughter2_mass = 0;
-	app.add_option("-B,--daughter-B-mass", daughter2_mass
+	app.add_option("-B,--daughter-B-mass", daughter2_mass,
 				"Mass of daughter particle 'B' [P -> A B [C -> a b]]")
         ->required();
 
 	GReal_t daughter3_mass = 0;
-	app.add_option("-C,--daughter-C-mass", daughter3_mass
+	app.add_option("-C,--daughter-C-mass", daughter3_mass,
 				"Mass of daughter particle 'C' [P -> A B [C -> a b]]")
         ->required();
 
 
 	GReal_t gand_daughter1_mass = 0;
-	app.add_option("-a,--grand-daughter-a-mass", gand_daughter1_mass
+	app.add_option("-a,--grand-daughter-a-mass", gand_daughter1_mass,
 				"Mass of grand-daughter particle 'a' [P -> A B [C -> a b]]")
         ->required();
 
 	GReal_t gand_daughter2_mass = 0;
-	app.add_option("-b,--grand-daughter-b-mass", gand_daughter2_mass
+	app.add_option("-b,--grand-daughter-b-mass", gand_daughter2_mass,
 				"Mass of grand-daughter particle 'b' [P -> A B [C -> a b]]")
         ->required();
 
@@ -96,7 +99,7 @@ GInt_t main(int argc, char** argv) {
         return app.exit(e);
     }
 
-    CLI::AutoTimer total_timer{"Total time taken: "};
+    CLI::AutoTimer total_timer{"Total time taken", CLI::Timer::Big};
 
 	//----------------
 	// P-> A B C
@@ -130,7 +133,7 @@ GInt_t main(int argc, char** argv) {
 
 
     {
-        CLI::AutoTimer timer{"C -> a b"};
+        CLI::AutoTimer timer{"C -> a b", CLI::Timer::Big};
 	    phsp_C.Generate( P2ABC_Events_d.DaughtersBegin(0), P2ABC_Events_d.DaughtersEnd(0)
 			, C2ab_Events_d.begin());
     }
@@ -145,9 +148,9 @@ GInt_t main(int argc, char** argv) {
 	typedef hydra::experimental::Events<2, device> event2_t;
 	hydra::experimental::Chain<event3_t, event2_t> chain(std::move(P2ABC_Events_d), std::move(C2ab_Events_d));
 
-	for(auto row:chain ){
-        std::cout << row << std::endl;
-	}
+	//for(auto row:chain ){
+    //    std::cout << row << std::endl;
+//	}
 
 
 
