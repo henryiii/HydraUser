@@ -12,7 +12,7 @@ endif()
 
 
 if(NOT EXISTS "${PROJECT_SOURCE_DIR}/cmake/README.md")
-    message(FATAL_ERROR "You must get the submodule(s) also, use `git submodule update --init`")
+    message(FATAL_ERROR "You must get the submodule(s) also, use `git submodule update --init` or use `--recursive` when you clone this repository.")
 endif()
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(HYDRA_ROOT "../Hydra")

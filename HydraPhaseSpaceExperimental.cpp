@@ -162,11 +162,5 @@ GInt_t main(int argc, char** argv) {
 	typedef hydra::experimental::Events<2, device> event2_t;
 	hydra::experimental::Chain<event3_t, event2_t> chain(std::move(P2ABC_Events_d), std::move(C2ab_Events_d));
 
-	//for(auto row:chain ){
-    //    std::cout << row << std::endl;
-//	}
-
-
-
 	return 0;
 }
