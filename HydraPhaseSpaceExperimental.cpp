@@ -95,6 +95,10 @@ GInt_t main(int argc, char** argv) {
 				"Mass of grand-daughter particle 'b' [P -> A B [C -> a b]]")
         ->required();
 
+    #if __NVCC__
+	bool sync;
+	app.add_flag("--sync", sync, "Include sync time in timers");
+    #endif
 
     try {
         app.parse(argc, argv);
@@ -104,7 +108,7 @@ GInt_t main(int argc, char** argv) {
     }
 
     std::cout << rang::fg::blue <<
-        "Hydra:\n" << app.config_to_str()
+        "Hydra:\n" << app.config_to_str(true)
         << rang::fg::reset << std::flush; 
 
     CLI::AutoTimer total_timer{"Total time taken", CLI::Timer::Big};
@@ -124,6 +128,10 @@ GInt_t main(int argc, char** argv) {
     {
         CLI::AutoTimer timer {"P -> A B C", CLI::Timer::Big};
 	    phsp_P.Generate(P, P2ABC_Events_d.begin(), P2ABC_Events_d.end());
+        #if __NVCC__
+        if(sync)
+            cudaDeviceSynchronize();
+        #endif
     }
 
     std::cout << rang::fg::green;
@@ -146,6 +154,10 @@ GInt_t main(int argc, char** argv) {
         CLI::AutoTimer timer{"C -> a b", CLI::Timer::Big};
 	    phsp_C.Generate( P2ABC_Events_d.DaughtersBegin(0), P2ABC_Events_d.DaughtersEnd(0)
 			, C2ab_Events_d.begin());
+        #if __NVCC__
+        if(sync)
+            cudaDeviceSynchronize();
+        #endif
     }
 
     std::cout << rang::fg::green;
