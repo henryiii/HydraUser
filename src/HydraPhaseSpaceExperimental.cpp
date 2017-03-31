@@ -62,42 +62,37 @@ GInt_t main(int argc, char** argv) {
 
     CLI::App app{"Command line arguments for HydraRandomExample"};
 
-	size_t  nentries = 5e6;
+	size_t  nentries = 10000000;
     app.add_option("-n,--number-of-events", nentries, "Number of events", true);
 
-	GReal_t mother_mass = 0;
-	app.add_option("-P,--parent-mass", mother_mass, "Mass of mother particle")
-        ->required();
+	GReal_t mother_mass = 2.28646;
 
-	GReal_t daughter1_mass = 0;
+	app.add_option("-P,--parent-mass", mother_mass, "Mass of mother particle", true);
+
+	GReal_t daughter1_mass = 1.00728;
 	app.add_option("-A,--daughter-A-mass", daughter1_mass,
-				"Mass of daughter particle 'A' [P -> A B [C -> a b]]")
-        ->required();
+				"Mass of daughter particle 'A' [P -> A B [C -> a b]]", true);
 
-	GReal_t daughter2_mass = 0;
+	GReal_t daughter2_mass = 0.13957;
 	app.add_option("-B,--daughter-B-mass", daughter2_mass,
-				"Mass of daughter particle 'B' [P -> A B [C -> a b]]")
-        ->required();
+				"Mass of daughter particle 'B' [P -> A B [C -> a b]]", true);
 
-	GReal_t daughter3_mass = 0;
+	GReal_t daughter3_mass = 0.493677;
 	app.add_option("-C,--daughter-C-mass", daughter3_mass,
-				"Mass of daughter particle 'C' [P -> A B [C -> a b]]")
-        ->required();
+				"Mass of daughter particle 'C' [P -> A B [C -> a b]]", true);
 
 
-	GReal_t gand_daughter1_mass = 0;
+	GReal_t gand_daughter1_mass = .1;
 	app.add_option("-a,--grand-daughter-a-mass", gand_daughter1_mass,
-				"Mass of grand-daughter particle 'a' [P -> A B [C -> a b]]")
-        ->required();
+				"Mass of grand-daughter particle 'a' [P -> A B [C -> a b]]", true);
 
-	GReal_t gand_daughter2_mass = 0;
+	GReal_t gand_daughter2_mass = .2;
 	app.add_option("-b,--grand-daughter-b-mass", gand_daughter2_mass,
-				"Mass of grand-daughter particle 'b' [P -> A B [C -> a b]]")
-        ->required();
+				"Mass of grand-daughter particle 'b' [P -> A B [C -> a b]]", true);
 
     #if __NVCC__
-	bool sync;
-	app.add_flag("--sync", sync, "Include sync time in timers");
+	bool nosync;
+	app.add_flag("--nosync", nosync, "Don't include sync time in timers");
     #endif
 
     try {
@@ -129,7 +124,7 @@ GInt_t main(int argc, char** argv) {
         CLI::AutoTimer timer {"P -> A B C", CLI::Timer::Big};
 	    phsp_P.Generate(P, P2ABC_Events_d.begin(), P2ABC_Events_d.end());
         #if __NVCC__
-        if(sync)
+        if(!nosync)
             cudaDeviceSynchronize();
         #endif
     }
