@@ -21,7 +21,11 @@ include(AddRang)
 
 set(HYDRA_URL "https://github.com/henryiii/Hydra.git" CACHE STRING "")
 set(HYDRA_TAG "origin/dev_fixes" CACHE STRING "")
+#set(HYDRA_MT_HOST ON CACHE BOOL "")
 include(AddHydra)
 
-hydra_add_executable(PS src/HydraPhaseSpaceExperimental.cpp)
-target_link_libraries(PS INTERFACE CLI11 rang)
+hydra_add_executable(EPS src/HydraPhaseSpaceExperimental.cpp)
+target_link_libraries(EPS INTERFACE rang CLI11)
+
+hydra_add_executable(OPS src/PhSp.cpp)
+target_link_libraries(OPS INTERFACE CLI11)
