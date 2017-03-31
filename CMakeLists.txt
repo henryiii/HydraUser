@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(HydraExample VERSION 0.2 LANGUAGES CXX)
+project(HydraExample VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -18,8 +18,10 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 include(AddCLI)
 include(AddRang)
-include(AddHydra)
 
+set(HYDRA_URL "https://github.com/henryiii/Hydra.git" CACHE STRING "")
+set(HYDRA_TAG "origin/dev_fixes" CACHE STRING "")
+include(AddHydra)
 
 hydra_add_executable(PS src/HydraPhaseSpaceExperimental.cpp)
 target_link_libraries(PS INTERFACE CLI11 rang)
