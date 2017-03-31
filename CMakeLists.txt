@@ -21,23 +21,27 @@ include(AddCLI)
 include(AddRang)
 include(AddHydra)
 
-add_executable(PS_CPP HydraPhaseSpaceExperimental.cpp)
-target_link_libraries(PS_CPP PUBLIC CLI11 Hydra::CPP rang)
 
-if(OPENMP_FOUND)
-    add_executable(PS_OMP HydraPhaseSpaceExperimental.cpp)
-    target_link_libraries(PS_OMP PUBLIC CLI11 Hydra::OMP rang)
-endif()
+hydra_add_executable(PS src/HydraPhaseSpaceExperimental.cpp)
+target_link_libraries(PS INTERFACE CLI11 rang)
 
-if(TBB_FOUND)
-    add_executable(PS_TBB HydraPhaseSpaceExperimental.cpp)
-    target_link_libraries(PS_TBB PUBLIC CLI11 Hydra::TBB rang)
-endif()
-
-if(CUDA_FOUND)
-    enable_language(CUDA)
-    configure_file(HydraPhaseSpaceExperimental.cpp HydraPhaseSpaceExperimental.cu)
-    add_executable(PS_CUDA HydraPhaseSpaceExperimental.cu)
-    target_link_libraries(PS_CUDA PUBLIC CLI11 Hydra::CUDA rang)
-endif()
-
+#add_executable(PS_CPP HydraPhaseSpaceExperimental.cpp)
+#target_link_libraries(PS_CPP PUBLIC CLI11 Hydra::CPP rang)
+#
+#if(OPENMP_FOUND)
+#    add_executable(PS_OMP HydraPhaseSpaceExperimental.cpp)
+#    target_link_libraries(PS_OMP PUBLIC CLI11 Hydra::OMP rang)
+#endif()
+#
+#if(TBB_FOUND)
+#    add_executable(PS_TBB HydraPhaseSpaceExperimental.cpp)
+#    target_link_libraries(PS_TBB PUBLIC CLI11 Hydra::TBB rang)
+#endif()
+#
+#if(CUDA_FOUND)
+#    enable_language(CUDA)
+#    configure_file(HydraPhaseSpaceExperimental.cpp HydraPhaseSpaceExperimental.cu)
+#    add_executable(PS_CUDA HydraPhaseSpaceExperimental.cu)
+#    target_link_libraries(PS_CUDA PUBLIC CLI11 Hydra::CUDA rang)
+#endif()
+#
