@@ -1,6 +1,11 @@
 # HydraUser
 
-Get and run a Hydra application. This uses CMake 3.8 (rc)'s new CUDA as a first class language support to provide a great interface for making your own Hydra applications.
+Get and run a Hydra application. This uses CMake 3.8 (rc)'s new CUDA as a first class language support to provide a great interface for making your own Hydra applications. To get CMake 3.8 rc4:
+
+```bash
+mkdir cmake && wget -qO- "https://cmake.org/files/v3.8/cmake-3.8.0-rc4-Linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C cmake
+export PATH=`pwd`/cmake/bin:$PATH
+```
 
 ## Writing your own Hydra applications
 
