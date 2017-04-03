@@ -95,9 +95,15 @@ GInt_t main(int argc, char** argv) {
 
     // Fill the event list
     {
-        CLI::AutoTimer time{"Generating using HYDRA"};
+        CLI::AutoTimer timer {"P -> A B C"};
         phsp.Generate(mother, event_list.begin(), event_list.end());
     }
+        #if __NVCC__
+    {
+        CLI::AutoTimer timer {"cudaDeviceSynchronize()"}; 
+        cudaDeviceSynchronize();
+    }
+        #endif
 
     // Copy the events to the host
     CLI::Timer time_host("Copying to host");

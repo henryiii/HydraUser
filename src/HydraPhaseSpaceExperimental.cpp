@@ -95,6 +95,9 @@ GInt_t main(int argc, char** argv) {
 	app.add_flag("--nosync", nosync, "Don't include sync time in timers");
     #endif
 
+    bool printout;
+    app.add_flag("--printout,-p", printout, "Print out more info");
+
     try {
         app.parse(argc, argv);
     } catch (const CLI::ParseError &e){
@@ -102,11 +105,14 @@ GInt_t main(int argc, char** argv) {
         return app.exit(e);
     }
 
-    std::cout << rang::fg::blue <<
-        "Hydra:\n" << app.config_to_str(true)
-        << rang::fg::reset << std::flush; 
+    if(printout)
+        std::cout << rang::fg::blue <<
+            "Hydra:\n" << app.config_to_str(true)
+            << rang::fg::reset << std::flush; 
 
-    CLI::AutoTimer total_timer{"Total time taken", CLI::Timer::Big};
+    auto &timer_style = printout ? CLI::Timer::Big : CLI::Timer::Simple;
+
+    CLI::AutoTimer total_timer{"Total time taken", timer_style};
 
 	//----------------
 	// P-> A B C
@@ -121,21 +127,27 @@ GInt_t main(int argc, char** argv) {
 	hydra::experimental::Events<3, device> P2ABC_Events_d(nentries);
 
     {
-        CLI::AutoTimer timer {"P -> A B C", CLI::Timer::Big};
+        CLI::AutoTimer timer {"P -> A B C", timer_style};
 	    phsp_P.Generate(P, P2ABC_Events_d.begin(), P2ABC_Events_d.end());
+    }
         #if __NVCC__
+    {
+        CLI::AutoTimer timer {"cudaDeviceSynchronize()", timer_style}; 
         if(!nosync)
             cudaDeviceSynchronize();
+    }
         #endif
+
+    if(printout) {
+        std::cout << rang::fg::green;
+        for(size_t i=0; i<10; i++ ){
+            std::cout << P2ABC_Events_d[i] << std::endl;
+        }
+        std::cout << rang::fg::reset;
     }
 
-    std::cout << rang::fg::green;
-	for(size_t i=0; i<10; i++ ){
-        std::cout << P2ABC_Events_d[i] << std::endl;
-	}
-    std::cout << rang::fg::reset;
 
-
+   /*
    //----------------
    // C-> a b
    //----------------
@@ -146,28 +158,31 @@ GInt_t main(int argc, char** argv) {
 
 
     {
-        CLI::AutoTimer timer{"C -> a b", CLI::Timer::Big};
+        CLI::AutoTimer timer{"C -> a b", timer_style};
 	    phsp_C.Generate( P2ABC_Events_d.DaughtersBegin(0), P2ABC_Events_d.DaughtersEnd(0)
 			, C2ab_Events_d.begin());
         #if __NVCC__
+        std::cout << timer << std::endl;
         if(sync)
             cudaDeviceSynchronize();
         #endif
     }
 
-    std::cout << rang::fg::green;
-	for( size_t i=0; i<10; i++ ){
-        std::cout << C2ab_Events_d[i] << std::endl;
-	}
-    std::cout << rang::fg::reset;
+    if(printout) {
+        std::cout << rang::fg::green;
+        for( size_t i=0; i<10; i++ ){
+            std::cout << C2ab_Events_d[i] << std::endl;
+        }
+        std::cout << rang::fg::reset;
 
-    std::cout << rang::style::bold << rang::fg::magenta
-              << "Events generated: " << P2ABC_Events_d.GetNEvents()
-              << rang::style::reset << std::endl;
+        std::cout << rang::style::bold << rang::fg::magenta
+                  << "Events generated: " << P2ABC_Events_d.GetNEvents()
+                  << rang::style::reset << std::endl;
+    }
 
-	typedef hydra::experimental::Events<3, device> event3_t;
-	typedef hydra::experimental::Events<2, device> event2_t;
-	hydra::experimental::Chain<event3_t, event2_t> chain(std::move(P2ABC_Events_d), std::move(C2ab_Events_d));
-
+	//typedef hydra::experimental::Events<3, device> event3_t;
+	//typedef hydra::experimental::Events<2, device> event2_t;
+	//hydra::experimental::Chain<event3_t, event2_t> chain(std::move(P2ABC_Events_d), std::move(C2ab_Events_d));
+    */
 	return 0;
 }
